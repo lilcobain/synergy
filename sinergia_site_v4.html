@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Синергия — креативная лаборатория</title>
+<meta name="theme-color" content="#0E0E0E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%2240%2066%20496%20520%22%3E%3Cpath%20fill%3D%22%23FF2A00%22%20fill-rule%3D%22evenodd%22%20d%3D%22M40%2C313%20174%2C313%20287%2C197%20404%2C313%20535%2C313%20288%2C66ZM41%2C368%20258%2C585%20320%2C585%20436%2C469%20306%2C469%20302%2C470%20290%2C482%20288%2C482%20257%2C451%20257%2C449%20307%2C402%20210%2C404%20174%2C368ZM238%2C472%20239%2C471%20265%2C497%20239%2C498Z%22/%3E%3C/svg%3E">
+<style>
+:root{
+  --acc:#FF2A00;--acc2:#FF6A3D;--ink:#0E0E0E;--ink2:#171717;--line:#2A2A2A;--paper:#F3F1EC;--white:#fff;--mute:#9A9A9A;
+  --display:"Montserrat","Futura","Century Gothic","Arial Black",Arial,sans-serif;
+  --text:"Inter","Helvetica Neue",Arial,sans-serif;
+  --max:1280px;--ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--text);color:var(--white);background:var(--ink);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+h1,h2,h3{font-family:var(--display);font-weight:800;text-transform:uppercase;line-height:1;letter-spacing:-.01em;overflow-wrap:normal;hyphens:none}
+section{padding:120px 0;scroll-margin-top:70px;position:relative}
+.mk{fill:currentColor}
+::selection{background:var(--acc);color:#fff}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+
+.label{display:flex;align-items:center;gap:12px;font:700 12px var(--text);letter-spacing:.2em;text-transform:uppercase;color:var(--acc);margin-bottom:22px}
+.label b{font-family:var(--display);font-size:12px;color:var(--mute);letter-spacing:.1em}
+.label svg{width:18px;height:18px;flex:none}
+h2{font-size:clamp(30px,4.8vw,72px);margin-bottom:56px;line-height:1.06}
+h2 .o{color:transparent;-webkit-text-stroke:2px var(--acc)}
+h2 .a{color:var(--acc)}
+
+/* полоса прогресса */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--acc);width:0;z-index:100}
+
+/* прелоадер */
+.pre{position:fixed;inset:0;background:var(--ink);z-index:200;display:flex;align-items:center;justify-content:center;transition:transform .9s var(--ease) .1s}
+.pre svg{width:120px;color:var(--acc);overflow:visible}
+.pre .roof{animation:roofIn .7s var(--ease) both}
+.pre .base{animation:baseIn .7s var(--ease) .15s both}
+@keyframes roofIn{from{transform:translateY(-120px);opacity:0}}
+@keyframes baseIn{from{transform:translateX(-160px);opacity:0}}
+.pre.done{transform:translateY(-100%)}
+
+/* шапка */
+header{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .3s,border-color .3s,transform .3s;border-bottom:1px solid transparent}
+header.solid{background:rgba(14,14,14,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:76px;gap:20px}
+.logo{display:block;color:var(--acc);flex:none}
+.logo svg{height:44px;width:auto;display:block}
+.menu{display:flex;gap:4px;list-style:none;align-items:center}
+.menu a{display:block;font-size:13px;font-weight:600;letter-spacing:.04em;padding:9px 14px;border-radius:40px;color:#D8D8D8;white-space:nowrap;transition:.2s}
+.menu a:hover{color:#fff;background:#222}
+.menu a.active{color:#fff;background:var(--acc)}
+.burger{display:none;background:none;border:0;cursor:pointer;width:46px;height:46px;position:relative;flex:none}
+.burger span,.burger span::before,.burger span::after{position:absolute;left:11px;width:24px;height:2px;background:#fff;content:"";transition:.25s}
+.burger span{top:22px}.burger span::before{top:-8px;left:0}.burger span::after{top:8px;left:0}
+.burger[aria-expanded="true"] span{background:transparent}
+.burger[aria-expanded="true"] span::before{top:0;transform:rotate(45deg)}
+.burger[aria-expanded="true"] span::after{top:0;transform:rotate(-45deg)}
+
+/* первый экран */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden;background:
+  radial-gradient(900px 600px at 78% 45%,rgba(255,42,0,.22),transparent 60%),var(--ink)}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.45;mask-image:radial-gradient(ellipse at 70% 50%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 50%,#000 10%,transparent 70%)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center;width:100%}
+.hero h1{font-size:clamp(34px,5vw,80px)}
+.hero h1 .ln{white-space:nowrap}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.04em}
+.hero h1 .ln>span{display:block;transform:translateY(110%);transition:transform 1s var(--ease)}
+.hero h1 .ln:nth-child(2)>span{transition-delay:.08s}.hero h1 .ln:nth-child(3)>span{transition-delay:.16s}
+.ready .hero h1 .ln>span{transform:none}
+.hero h1 em{font-style:normal;color:var(--acc)}
+.hero .lead{font-size:19px;color:#C9C9C9;max-width:500px;margin:30px 0 40px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:17px 28px;border-radius:60px;font:700 14px var(--text);letter-spacing:.04em;border:2px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer;transition:.25s var(--ease);position:relative;overflow:hidden}
+.btn .ar{display:inline-block;transition:transform .25s var(--ease)}
+.btn:hover .ar{transform:translateX(5px)}
+.btn:hover{background:#fff;border-color:#fff;color:var(--ink)}
+.btn.ghost{background:transparent;border-color:#555;color:#fff}
+.btn.ghost:hover{border-color:#fff;background:#fff;color:var(--ink)}
+.now-pill{display:inline-flex;align-items:center;gap:10px;margin-top:44px;padding:10px 18px 10px 14px;border:1px solid var(--line);border-radius:40px;background:rgba(255,255,255,.03);font-size:14px;color:#ccc;max-width:100%}
+.now-pill i{width:9px;height:9px;border-radius:50%;background:var(--acc);flex:none;box-shadow:0 0 0 0 rgba(255,42,0,.6);animation:pulse 1.6s infinite}
+.now-pill span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(255,42,0,0)}100%{box-shadow:0 0 0 0 rgba(255,42,0,0)}}
+.hero-art{position:relative;justify-self:center;width:100%;max-width:470px;color:var(--acc)}
+.hero-art svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 30px 60px rgba(255,42,0,.35))}
+.hero-art .roof,.hero-art .base{transition:transform .6s var(--ease)}
+.hero-art .ring{position:absolute;inset:-14%;border:1px dashed #3a3a3a;border-radius:50%;animation:spin 40s linear infinite}
+.hero-art .ring::after{content:"";position:absolute;top:50%;left:-6px;width:12px;height:12px;border-radius:50%;background:var(--acc)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scroll-hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);font-size:11px;letter-spacing:.25em;color:var(--mute);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-hint::after{content:"";width:1px;height:40px;background:linear-gradient(var(--acc),transparent);animation:drop 1.8s infinite}
+@keyframes drop{from{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}to{transform:scaleY(0);transform-origin:bottom}}
+
+/* бегущая строка */
+.mq-wrap{overflow:hidden;margin-top:-30px;padding:30px 0 10px;position:relative;z-index:2;background:linear-gradient(var(--ink) 50%,var(--paper) 50%)}
+.marquee{background:var(--acc);color:#fff;overflow:hidden;white-space:nowrap;transform:rotate(-1.6deg);margin:0 -20px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.marquee .tr{display:inline-flex;animation:run 30s linear infinite}
+.marquee span{font:800 clamp(20px,2.6vw,34px)/1 var(--display);text-transform:uppercase;padding:20px 0;display:inline-flex;align-items:center;gap:28px;margin-right:28px}
+.marquee svg{height:.9em;width:auto;color:var(--ink)}
+@keyframes run{to{transform:translateX(-50%)}}
+
+/* о нас — светлая секция */
+.light{background:var(--paper);color:var(--ink)}
+.about-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:70px;align-items:end}
+.big-text{font:600 clamp(22px,2.4vw,32px)/1.35 var(--text);letter-spacing:-.01em}
+.big-text em{font-style:normal;color:var(--acc)}
+.about-grid p.sm{margin-top:22px;color:#555;font-size:16px;max-width:560px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#fff;border-radius:22px;padding:26px 24px;min-width:0;transition:.3s var(--ease)}
+.stat:hover{background:var(--acc);color:#fff;transform:translateY(-4px)}
+.stat b{display:block;font:800 clamp(40px,4.4vw,64px)/1 var(--display);margin-bottom:14px}
+.stat span{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+
+/* направления — аккордеон */
+.acc{display:flex;gap:12px;height:520px}
+.panel{flex:1;min-width:0;border-radius:26px;background:var(--ink2);border:1px solid var(--line);position:relative;overflow:hidden;cursor:pointer;transition:flex .7s var(--ease),background .4s,border-color .4s;display:flex;flex-direction:column;justify-content:space-between;padding:28px;text-align:left;color:#fff}
+.panel.open{flex:3.2;background:var(--acc);border-color:var(--acc)}
+.panel .num{font:800 16px var(--display);color:var(--acc)}
+.panel.open .num{color:#fff}
+.panel .bg{position:absolute;right:-60px;bottom:-60px;width:300px;color:rgba(255,255,255,.05);transition:.7s var(--ease);pointer-events:none}
+.panel.open .bg{color:rgba(0,0,0,.12);transform:rotate(-12deg) scale(1.15)}
+.panel h3{font-size:clamp(20px,2.2vw,32px);position:relative}
+.panel .vt{position:absolute;left:28px;bottom:28px;writing-mode:vertical-rl;transform:rotate(180deg);font:800 22px var(--display);text-transform:uppercase;white-space:nowrap;transition:opacity .3s}
+.panel .ct{opacity:0;transform:translateY(16px);transition:.4s var(--ease);position:relative;max-width:440px}
+.panel.open .ct{opacity:1;transform:none;transition-delay:.25s}
+.panel.open .vt{opacity:0}
+.panel .ct p{margin:14px 0 22px;font-size:16px;color:rgba(255,255,255,.9)}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.tags span{font-size:12px;font-weight:700;padding:7px 12px;border-radius:30px;background:rgba(0,0,0,.18)}
+.panel .go{display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--ink);padding:12px 20px;border-radius:40px;font-weight:700;font-size:13px;border:0;cursor:pointer}
+
+/* тест */
+.quiz-box{display:grid;grid-template-columns:minmax(0,1fr) 320px;border-radius:28px;overflow:hidden;border:1px solid var(--line);background:var(--ink2)}
+.q-main{padding:44px;min-height:380px}
+.q-side{padding:44px 36px;background:#121212;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:18px}
+.q-step{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+.q-title{font:800 clamp(24px,3vw,40px)/1.1 var(--display);text-transform:uppercase;margin:14px 0 30px}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.q-opts button{font:600 16px var(--text);text-align:left;padding:20px 22px;border-radius:18px;border:1px solid #333;background:#1c1c1c;color:#fff;cursor:pointer;transition:.25s var(--ease);line-height:1.35;display:flex;gap:14px;align-items:center}
+.q-opts button b{font:800 13px var(--display);color:var(--acc);flex:none;width:28px;height:28px;border-radius:50%;border:1px solid #444;display:grid;place-items:center}
+.q-opts button:hover{border-color:var(--acc);transform:translateY(-3px);background:#222}
+.dots{display:flex;gap:8px}
+.dots i{flex:1;height:5px;border-radius:5px;background:#2c2c2c;transition:.3s}
+.dots i.on{background:var(--acc)}
+.q-side p{color:#aaa;font-size:14px}
+.q-anim{animation:qin .45s var(--ease)}
+@keyframes qin{from{opacity:0;transform:translateX(24px)}}
+.res h3{font-size:clamp(30px,4vw,56px);color:var(--acc);margin:14px 0 16px}
+.res p{color:#ddd;font-size:17px;max-width:560px;margin-bottom:28px}
+
+/* карта — редизайн */
+.map-sec{background:var(--ink);border-top:1px solid var(--line)}
+.map-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.map-top h2{margin:0}
+.floors{display:flex;gap:8px}
+.floors button{width:74px;height:74px;border-radius:20px;border:1px solid var(--line);background:var(--ink2);color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.25s var(--ease)}
+.floors button b{font:800 30px/1 var(--display)}
+.floors button span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:4px}
+.floors button[aria-selected="true"]{background:var(--acc);border-color:var(--acc)}
+.floors button[aria-selected="true"] span{color:#fff}
+.map-bar{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{display:inline-flex;align-items:center;gap:8px;font:600 13px var(--text);padding:10px 16px;border-radius:30px;border:1px solid var(--line);background:transparent;color:#ccc;cursor:pointer;transition:.2s}
+.chips button i{width:9px;height:9px;border-radius:50%}
+.chips button[aria-pressed="true"]{background:#fff;color:var(--ink);border-color:#fff}
+.msearch{display:flex;align-items:center;background:var(--ink2);border:1px solid var(--line);border-radius:30px;padding:4px 4px 4px 18px;min-width:0}
+.msearch input{border:0;background:transparent;color:#fff;font:15px var(--text);outline:none;width:200px;min-width:0}
+.msearch input::placeholder{color:#777}
+.msearch button{width:40px;height:40px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:16px;cursor:pointer;flex:none}
+.map-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px}
+.map-card{background:var(--ink2);border:1px solid var(--line);border-radius:28px;padding:20px;min-width:0;position:relative;overflow:hidden}
+.map-card::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#262626 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
+.map-scroll{overflow-x:auto;position:relative}
+#planSvg{width:100%;min-width:640px;height:auto;display:block}
+.room{cursor:pointer;outline:none;transition:opacity .3s}
+.room rect.bx{fill:#1E1E1E;stroke:#333;stroke-width:1.2;transition:fill .25s,stroke .25s}
+.room rect.st{transition:fill .25s}
+.room text{font:600 12px Arial,sans-serif;fill:#BDBDBD;pointer-events:none}
+.room text.n{font:800 26px Arial,sans-serif;fill:#fff}
+.room:hover rect.bx,.room:focus-visible rect.bx{fill:#262626;stroke:#666}
+.room.on rect.bx{fill:var(--acc);stroke:var(--acc)}
+.room.on text,.room.on text.n{fill:#fff}
+.room.on rect.st{fill:#fff}
+.room.dim{opacity:.18}
+.corr{fill:#151515;stroke:#2a2a2a;stroke-dasharray:4 6}
+.corr-t{font:700 10px Arial,sans-serif;fill:#555;letter-spacing:3px}
+.wing2{font:800 12px Arial,sans-serif;fill:#666;letter-spacing:3px}
+.route{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 8;animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-28}}
+.you circle.c{fill:var(--acc)}
+.you circle.p{fill:none;stroke:var(--acc);stroke-width:2;animation:ping 1.6s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(2.4);opacity:0}}
+.you text{font:800 10px Arial,sans-serif;fill:#fff;letter-spacing:1px}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.info{border-radius:28px;padding:28px;background:var(--acc);color:#fff;display:flex;flex-direction:column;gap:10px;min-height:250px;position:relative;overflow:hidden}
+.info .bgm{position:absolute;right:-50px;bottom:-60px;width:220px;color:rgba(0,0,0,.12);pointer-events:none}
+.info .tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;opacity:.85}
+.info h3{font-size:30px;line-height:1.05}
+.info p{font-size:15px;opacity:.92;max-width:270px}
+.info .way{margin-top:auto;display:flex;gap:10px;align-items:flex-start;font-size:14px;background:rgba(0,0,0,.16);padding:12px 14px;border-radius:16px;position:relative}
+.info .way b{flex:none}
+.rlist{background:var(--ink2);border:1px solid var(--line);border-radius:28px;padding:10px;max-height:300px;overflow:auto}
+.rlist button{display:flex;width:100%;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:14px;background:transparent;color:#ddd;cursor:pointer;text-align:left;font:500 14px var(--text)}
+.rlist button:hover{background:#222}
+.rlist button.on{background:#fff;color:var(--ink)}
+.rlist button i{width:8px;height:8px;border-radius:50%;flex:none}
+.rlist button b{font:800 13px var(--display);min-width:34px;color:var(--mute)}
+.rlist button.on b{color:var(--acc)}
+.rlist button.hide{display:none}
+
+/* расписание */
+.clock{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin:-30px 0 34px}
+.clock b{font:800 clamp(40px,5vw,72px)/1 var(--display);color:var(--acc);font-variant-numeric:tabular-nums}
+.clock span{color:var(--mute);font-size:15px;text-transform:capitalize}
+.live-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.lesson{border-radius:24px;border:1px solid var(--line);background:var(--ink2);padding:26px;display:flex;flex-direction:column;gap:10px;min-width:0;position:relative;overflow:hidden}
+.lesson.now{background:var(--acc);border-color:var(--acc)}
+.lesson .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.lesson .st{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.lesson.now .st{color:#fff}
+.lesson.now .st::before{content:"● ";animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.2}}
+.lesson .rn{font:800 15px var(--display);padding:6px 12px;border-radius:30px;background:#262626;flex:none}
+.lesson.now .rn{background:rgba(0,0,0,.2)}
+.lesson h3{font-size:22px;margin-top:18px}
+.lesson .meta{color:#aaa;font-size:14px}
+.lesson.now .meta{color:rgba(255,255,255,.85)}
+.lesson .pb{height:4px;border-radius:4px;background:rgba(0,0,0,.2);margin-top:12px;overflow:hidden}
+.lesson .pb i{display:block;height:100%;background:#fff}
+
+/* новости */
+.news-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px}
+.post{border-radius:26px;overflow:hidden;background:#fff;color:var(--ink);display:flex;flex-direction:column;min-width:0;transition:.35s var(--ease)}
+.post:hover{transform:translateY(-6px)}
+.post .img{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.post .img svg{height:58%;width:auto;transition:transform .7s var(--ease)}
+.post:hover .img svg{transform:scale(1.12) rotate(-6deg)}
+.post .body{padding:24px 26px 28px;display:flex;flex-direction:column;gap:10px}
+.post .date{font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.12em;text-transform:uppercase}
+.post h3{font-size:22px;line-height:1.1}
+.post p{font-size:15px;color:#555}
+.side-news{display:grid;gap:16px}
+.side-news .post{flex-direction:row}
+.side-news .img{aspect-ratio:auto;width:38%;flex:none;min-height:180px}
+.side-news h3{font-size:18px}
+
+/* контакты */
+.contact{background:var(--acc);color:#fff;overflow:hidden}
+.contact .label{color:#fff}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+.contact dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px 20px;font-size:18px}
+.contact dt{font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.14em;padding-top:5px;opacity:.8}
+.contact dd{overflow-wrap:anywhere}
+form{display:grid;gap:12px;background:var(--ink);padding:30px;border-radius:28px}
+form input,form textarea,form select{font:16px var(--text);padding:16px 18px;border:1px solid #333;border-radius:16px;background:#1a1a1a;color:#fff;width:100%;outline:none;transition:border-color .2s}
+form input:focus,form textarea:focus,form select:focus{border-color:var(--acc)}
+form textarea{min-height:110px;resize:vertical}
+.ok{font-weight:700;min-height:22px;color:var(--acc)}
+
+/* подвал с огромным логотипом */
+footer{background:var(--ink);padding:80px 0 30px;overflow:hidden}
+.foot-logo{color:var(--acc);width:100%}
+.foot-logo svg{width:100%;height:auto;display:block}
+.foot-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--mute)}
+.foot-row a:hover{color:#fff}
+.foot-links{display:flex;gap:22px;flex-wrap:wrap}
+
+/* появление при прокрутке */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+
+/* курсор */
+.cursor{position:fixed;top:0;left:0;width:36px;height:36px;border:1.5px solid var(--acc);border-radius:50%;pointer-events:none;z-index:150;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;mix-blend-mode:difference;display:none}
+.cursor.big{width:70px;height:70px;background:rgba(255,42,0,.25)}
+@media (hover:hover) and (pointer:fine){.cursor{display:block}}
+
+/* адаптив */
+@media (max-width:1100px){
+  .menu a{padding:8px 10px;font-size:12px}
+  .map-grid{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}
+  .quiz-box{grid-template-columns:1fr}.q-side{border-left:0;border-top:1px solid var(--line)}
+}
+@media (max-width:960px){
+  .menu{display:none;position:absolute;top:76px;left:0;right:0;background:var(--ink);flex-direction:column;align-items:stretch;padding:12px 20px 24px;gap:4px;border-bottom:1px solid var(--line)}
+  .menu.open{display:flex}
+  .menu a{font-size:18px;padding:14px 18px}
+  .burger{display:block}
+  header.menu-open{background:var(--ink)}
+  .hero .wrap{grid-template-columns:1fr;gap:56px}
+  .hero-art{max-width:280px;justify-self:start;margin-left:20px}
+  .about-grid,.contact-grid,.news-grid{grid-template-columns:1fr;gap:40px}
+  .acc{flex-direction:column;height:auto}
+  .panel{flex:none!important;min-height:86px}
+  .panel .vt{position:static;writing-mode:horizontal-tb;transform:none;font-size:20px;margin-top:8px}
+  .panel.open .vt{display:none}
+  .panel .ct{display:none}
+  .panel.open .ct{display:block}
+  .panel h3{margin-top:10px}
+  .live-grid{grid-template-columns:1fr}
+  section{padding:84px 0}
+  .scroll-hint{display:none}
+}
+@media (max-width:600px){
+  .wrap{padding:0 18px}
+  .logo svg{height:36px}
+  .q-main{padding:26px}.q-side{padding:26px}
+  .q-opts{grid-template-columns:1fr}
+  .side{grid-template-columns:1fr}.msearch{width:100%}.msearch input{flex:1;width:auto}.floors button{width:60px;height:60px}
+  .side-news .post{flex-direction:column}.side-news .img{width:100%;min-height:150px}
+  .contact dl{grid-template-columns:1fr;gap:2px}.contact dd{margin-bottom:12px}
+  form{padding:20px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:20px 16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}.hero h1 .ln>span{transform:none}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="pre" id="pre" aria-hidden="true">
+  <svg viewBox="40 66 496 520" class="mk"><path class="roof" d="M40,313 174,313 287,197 404,313 535,313 288,66Z"/><path class="base" fill-rule="evenodd" d="M41,368 258,585 320,585 436,469 306,469 302,470 290,482 288,482 257,451 257,449 307,402 210,404 174,368ZM238,472 239,471 265,497 239,498Z"/></svg>
+</div>
+<div class="cursor" id="cur" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="40 66 1900 520"><path fill-rule="evenodd" d="M40,313 174,313 287,197 404,313 535,313 288,66ZM41,368 258,585 320,585 436,469 306,469 302,470 290,482 288,482 257,451 257,449 307,402 210,404 174,368ZM238,472 239,471 265,497 239,498ZM1578,409 1579,583 1625,583 1714,467 1715,582 1759,582 1759,409 1711,409 1622,525 1621,409ZM1553,409 1426,409 1426,583 1469,582 1469,453 1471,451 1553,451ZM862,409 862,583 904,583 904,516 906,513 997,513 998,582 1042,583 1042,409 998,409 997,476 906,476 904,474 904,409ZM657,409 658,583 704,583 793,467 794,583 838,582 838,409 790,409 701,525 700,409ZM1802,418 1790,431 1783,447 1782,467 1788,486 1803,503 1814,509 1824,512 1861,513 1862,516 1851,531 1837,540 1815,547 1789,549 1789,583 1808,583 1826,580 1843,575 1860,567 1881,550 1889,539 1895,527 1896,582 1939,583 1939,408 1830,408 1813,412ZM1818,457 1823,448 1833,444 1895,444 1896,475 1894,477 1830,476 1825,474 1821,470 1818,463ZM1385,415 1373,410 1361,408 1253,408 1253,583 1295,583 1295,515 1297,513 1367,512 1384,506 1399,493 1405,483 1409,471 1409,449 1401,430 1391,419ZM1295,446 1297,444 1359,444 1367,447 1372,452 1373,465 1372,468 1366,474 1361,476 1297,477 1295,475ZM1092,421 1083,430 1074,443 1065,465 1062,480 1062,506 1066,524 1075,544 1082,554 1100,570 1109,575 1126,581 1139,583 1232,583 1232,546 1135,545 1120,538 1112,530 1104,515 1105,511 1232,511 1233,483 1230,466 1226,454 1219,440 1213,432 1202,421 1192,414 1173,406 1156,403 1134,403 1119,406 1105,412ZM1104,470 1113,454 1125,444 1137,440 1154,440 1166,443 1175,448 1186,460 1191,473 1105,474ZM483,423 471,437 464,449 458,465 455,480 455,506 459,524 467,542 478,557 497,572 510,578 526,582 628,583 628,546 536,546 523,543 514,538 505,529 498,516 494,500 495,480 502,461 506,455 516,446 531,440 554,441 570,448 579,457 585,468 588,477 590,492 628,493 628,476 624,460 618,446 606,429 592,417 579,410 564,405 551,403 528,403 513,406 497,413ZM1926,315 1921,319 1921,326 1927,331 1920,341 1921,342 1924,342 1926,341 1928,337 1930,335 1931,332 1933,331 1934,332 1934,341 1938,342 1939,341 1939,315ZM1926,321 1928,319 1933,319 1934,320 1934,326 1933,327 1930,327 1928,326 1926,324ZM1874,315 1874,341 1875,342 1878,342 1880,340 1882,336 1885,333 1887,329 1890,326 1891,327 1891,341 1892,342 1895,342 1896,341 1896,315 1892,315 1890,317 1890,318 1880,332 1879,331 1879,315ZM1846,315 1833,315 1833,341 1834,342 1837,342 1838,341 1838,331 1839,330 1844,330 1845,329 1847,329 1849,328 1851,325 1851,319ZM1838,320 1839,319 1844,319 1846,321 1846,324 1843,326 1840,326 1838,324ZM1741,315 1741,318 1742,319 1746,319 1747,320 1747,341 1748,342 1751,342 1752,341 1752,320 1753,319 1758,319 1758,315ZM1705,315 1699,327 1699,329 1696,334 1696,336 1693,341 1694,342 1698,342 1701,336 1714,336 1716,340 1718,342 1721,342 1722,340 1715,326 1715,324 1711,317 1711,315ZM1708,322 1712,330 1711,332 1705,332 1703,330 1706,324ZM1668,315 1655,315 1655,341 1656,342 1659,342 1660,341 1660,331 1661,330 1665,330 1666,329 1668,329 1672,326 1672,323 1673,322 1672,321 1672,319 1671,317ZM1660,320 1661,319 1665,319 1668,322 1668,323 1665,326 1661,326 1660,325ZM1560,315 1560,341 1561,342 1570,342 1571,341 1574,341 1576,340 1579,335 1579,332 1577,328 1572,325 1566,325 1565,324 1565,320 1566,319 1575,319 1575,315ZM1565,330 1566,329 1570,329 1572,330 1574,333 1573,336 1572,337 1567,338 1565,336ZM1520,315 1518,319 1518,321 1514,328 1514,330 1511,335 1511,337 1509,340 1509,342 1513,342 1515,340 1517,336 1529,336 1531,338 1532,341 1534,342 1537,342 1537,339 1532,330 1532,328 1530,325 1530,323 1526,315ZM1523,322 1525,324 1526,328 1527,329 1527,331 1526,332 1520,332 1519,331 1519,329ZM1472,315 1467,325 1467,327 1463,334 1463,336 1460,341 1461,342 1464,342 1466,341 1467,337 1469,334 1469,332 1473,325 1473,323 1475,322 1479,329 1479,331 1481,334 1481,336 1483,339 1483,341 1485,342 1488,342 1489,341 1483,329 1483,327 1480,322 1480,320 1477,315ZM1393,317 1391,323 1392,324 1393,328 1396,329 1397,330 1397,332 1391,341 1392,342 1395,342 1397,341 1401,333 1403,331 1404,331 1405,332 1405,341 1406,342 1409,342 1410,341 1410,315 1397,315ZM1397,321 1399,319 1404,319 1405,320 1405,325 1403,327 1398,326 1397,325ZM1353,315 1349,322 1349,324 1346,329 1346,331 1341,341 1342,342 1345,342 1347,340 1349,336 1362,336 1364,339 1364,341 1366,342 1369,342 1370,341 1367,336 1367,334 1364,329 1364,327 1360,320 1359,316 1358,315ZM1355,322 1357,324 1360,330 1359,332 1352,332 1351,331 1353,327 1353,325ZM1297,315 1297,341 1298,342 1302,341 1302,331 1303,330 1312,330 1313,331 1313,341 1314,342 1318,342 1318,315 1313,315 1313,325 1312,326 1303,326 1302,325 1302,315ZM1255,315 1255,341 1256,342 1265,342 1266,341 1269,341 1271,340 1274,336 1274,332 1272,330 1272,329 1271,329 1269,327 1272,322 1271,318 1269,316 1267,316 1266,315ZM1260,331 1261,330 1266,330 1269,333 1269,335 1267,337 1262,338 1260,336ZM1260,320 1261,319 1264,319 1267,322 1267,323 1264,326 1261,326 1260,325ZM1209,315 1209,341 1210,342 1212,342 1215,339 1215,338 1218,335 1218,334 1224,326 1226,327 1226,341 1227,342 1231,341 1231,316 1230,315 1226,315 1226,316 1221,322 1217,329 1215,331 1214,331 1213,330 1213,315ZM1170,315 1170,319 1175,319 1176,320 1176,341 1177,342 1179,342 1181,341 1181,320 1182,319 1186,319 1186,315ZM1133,315 1131,319 1131,321 1128,326 1128,328 1124,335 1124,337 1122,340 1122,342 1126,342 1128,340 1130,336 1142,336 1144,338 1146,342 1150,342 1150,339 1143,325 1143,323 1140,318 1140,316 1139,315ZM1136,322 1138,324 1139,328 1140,329 1140,331 1139,332 1133,332 1132,331 1132,329ZM1085,315 1085,341 1086,342 1100,342 1101,341 1101,338 1092,338 1090,336 1090,330 1091,329 1101,329 1101,325 1091,325 1090,324 1090,320 1091,319 1101,319 1101,315ZM1056,315 1043,315 1043,341 1044,342 1047,342 1048,341 1048,331 1049,330 1054,330 1055,329 1057,329 1059,328 1061,325 1061,319ZM1048,320 1049,319 1054,319 1056,321 1056,324 1053,326 1050,326 1048,324ZM1000,315 1000,341 1001,342 1004,342 1005,341 1005,331 1006,330 1011,335 1011,336 1015,340 1015,341 1017,342 1020,342 1021,340 1011,328 1011,326 1013,324 1013,323 1020,316 1020,315 1014,315 1007,323 1005,322 1005,315ZM1787,315 1781,320 1779,324 1779,333 1780,335 1785,340 1789,342 1800,342 1804,340 1809,335 1810,333 1810,324 1808,320 1805,317 1799,314 1790,314 1789,315ZM1789,319 1791,319 1792,318 1797,318 1798,319 1800,319 1805,324 1805,327 1806,328 1805,329 1805,332 1804,334 1799,338 1796,338 1795,339 1793,338 1790,338 1784,332 1784,325 1785,323ZM1605,317 1601,322 1601,324 1600,325 1600,332 1602,336 1606,340 1610,341 1611,342 1621,342 1622,341 1624,341 1629,337 1632,331 1632,326 1631,325 1630,321 1625,316 1621,315 1620,314 1611,314ZM1613,318 1619,318 1625,322 1627,326 1627,330 1626,331 1626,333 1622,337 1618,338 1617,339 1610,337 1606,333 1605,331 1605,326 1606,325 1606,323 1609,320Z"/></symbol>
+  <symbol id="word" viewBox="455 403 1485 183"><path fill-rule="evenodd" d="M1578,409 1579,583 1625,583 1714,467 1715,582 1759,582 1759,409 1711,409 1622,525 1621,409ZM1553,409 1426,409 1426,583 1469,582 1469,453 1471,451 1553,451ZM862,409 862,583 904,583 904,516 906,513 997,513 998,582 1042,583 1042,409 998,409 997,476 906,476 904,474 904,409ZM657,409 658,583 704,583 793,467 794,583 838,582 838,409 790,409 701,525 700,409ZM1802,418 1790,431 1783,447 1782,467 1788,486 1803,503 1814,509 1824,512 1861,513 1862,516 1851,531 1837,540 1815,547 1789,549 1789,583 1808,583 1826,580 1843,575 1860,567 1881,550 1889,539 1895,527 1896,582 1939,583 1939,408 1830,408 1813,412ZM1818,457 1823,448 1833,444 1895,444 1896,475 1894,477 1830,476 1825,474 1821,470 1818,463ZM1385,415 1373,410 1361,408 1253,408 1253,583 1295,583 1295,515 1297,513 1367,512 1384,506 1399,493 1405,483 1409,471 1409,449 1401,430 1391,419ZM1295,446 1297,444 1359,444 1367,447 1372,452 1373,465 1372,468 1366,474 1361,476 1297,477 1295,475ZM1092,421 1083,430 1074,443 1065,465 1062,480 1062,506 1066,524 1075,544 1082,554 1100,570 1109,575 1126,581 1139,583 1232,583 1232,546 1135,545 1120,538 1112,530 1104,515 1105,511 1232,511 1233,483 1230,466 1226,454 1219,440 1213,432 1202,421 1192,414 1173,406 1156,403 1134,403 1119,406 1105,412ZM1104,470 1113,454 1125,444 1137,440 1154,440 1166,443 1175,448 1186,460 1191,473 1105,474ZM483,423 471,437 464,449 458,465 455,480 455,506 459,524 467,542 478,557 497,572 510,578 526,582 628,583 628,546 536,546 523,543 514,538 505,529 498,516 494,500 495,480 502,461 506,455 516,446 531,440 554,441 570,448 579,457 585,468 588,477 590,492 628,493 628,476 624,460 618,446 606,429 592,417 579,410 564,405 551,403 528,403 513,406 497,413Z"/></symbol>
+  <symbol id="mark" viewBox="40 66 496 520"><path fill-rule="evenodd" d="M40,313 174,313 287,197 404,313 535,313 288,66ZM41,368 258,585 320,585 436,469 306,469 302,470 290,482 288,482 257,451 257,449 307,402 210,404 174,368ZM238,472 239,471 265,497 239,498Z"/></symbol>
+</svg>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="logo" aria-label="Синергия — на главную"><svg viewBox="40 66 1900 520" class="mk"><use href="#logo"/></svg></a>
+    <button class="burger" type="button" aria-label="Меню" aria-expanded="false"><span></span></button>
+    <ul class="menu">
+      <li><a href="#about">О нас</a></li>
+      <li><a href="#dirs">Направления</a></li>
+      <li><a href="#quiz">Тест</a></li>
+      <li><a href="#space">Карта</a></li>
+      <li><a href="#live">Расписание</a></li>
+      <li><a href="#news">Новости</a></li>
+      <li><a href="#contact">Контакты</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="label"><svg viewBox="40 66 496 520" class="mk"><use href="#mark"/></svg>Креативная лаборатория · Алматы</div>
+      <h1><span class="ln"><span>Творчество</span></span><span class="ln"><span>начинается</span></span><span class="ln"><span><em>здесь</em></span></span></h1>
+      <p class="lead rv d2">Пространство, где учатся, создают и находят свой путь. Мастерские, аудитории, галерея и коворкинг в одном здании.</p>
+      <div class="btns rv d3">
+        <a href="#quiz" class="btn">Подобрать направление <span class="ar">→</span></a>
+        <a href="#space" class="btn ghost">Карта здания</a>
+      </div>
+      <a href="#live" class="now-pill rv d3"><i></i><span id="nowPill">Загружаем расписание…</span></a>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="ring"></div>
+      <svg viewBox="40 66 496 520" class="mk" id="heroMark"><path class="roof" d="M40,313 174,313 287,197 404,313 535,313 288,66Z"/><path class="base" fill-rule="evenodd" d="M41,368 258,585 320,585 436,469 306,469 302,470 290,482 288,482 257,451 257,449 307,402 210,404 174,368ZM238,472 239,471 265,497 239,498Z"/></svg>
+    </div>
+  </div>
+  <div class="scroll-hint">Листай</div>
+</section>
+
+<div class="mq-wrap" aria-hidden="true"><div class="marquee"><div class="tr" id="mq"></div></div></div>
+
+<section class="light" id="about">
+  <div class="wrap">
+    <div class="label rv"><b>01</b>О нас</div>
+    <h2 class="rv">Место, где идея <span class="a">становится</span> проектом</h2>
+    <div class="about-grid">
+      <div class="rv">
+        <p class="big-text">«Синергия» — креативная лаборатория для тех, кто хочет работать с визуальной коммуникацией: <em>от плаката и шрифта</em> до навигации в здании и цифровых интерфейсов.</p>
+        <p class="sm">Здание повторяет форму нашего знака: два крыла. В крыле А — вход, галерея, кафе и аудитории. В крыле Б — мастерские, где идёт практика.</p>
+      </div>
+      <div class="stats rv d1">
+        <div class="stat"><b data-count="2">0</b><span>Этажа</span></div>
+        <div class="stat"><b data-count="2">0</b><span>Крыла</span></div>
+        <div class="stat"><b data-count="4">0</b><span>Направления</span></div>
+        <div class="stat"><b>24/7</b><span>Коворкинг</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dirs">
+  <div class="wrap">
+    <div class="label rv"><b>02</b>Обучение</div>
+    <h2 class="rv">Четыре <span class="o">направления</span></h2>
+    <div class="acc rv" id="acc"></div>
+  </div>
+</section>
+
+<section id="quiz" style="padding-top:0">
+  <div class="wrap">
+    <div class="label rv"><b>03</b>Тест · 1 минута</div>
+    <h2 class="rv">Какое направление <span class="a">твоё?</span></h2>
+    <div class="quiz-box rv">
+      <div class="q-main" id="qMain" aria-live="polite"></div>
+      <div class="q-side">
+        <span class="q-step">5 вопросов</span>
+        <div class="dots" id="qDots"><i></i><i></i><i></i><i></i><i></i></div>
+        <p>Ответь на вопросы, и мы подскажем направление, покажем мастерскую на карте и запишем на пробное занятие.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="map-sec" id="space">
+  <div class="wrap">
+    <div class="label rv"><b>04</b>Пространство</div>
+    <div class="map-top rv">
+      <h2>Карта <span class="o">здания</span></h2>
+      <div class="floors" role="tablist" aria-label="Этаж">
+        <button type="button" role="tab" aria-selected="true" data-floor="1"><b>1</b><span>этаж</span></button>
+        <button type="button" role="tab" aria-selected="false" data-floor="2"><b>2</b><span>этаж</span></button>
+      </div>
+    </div>
+    <div class="map-bar rv">
+      <div class="chips" id="chips">
+        <button type="button" aria-pressed="true" data-c="all">Все</button>
+        <button type="button" aria-pressed="false" data-c="ws"><i style="background:#FF2A00"></i>Мастерские</button>
+        <button type="button" aria-pressed="false" data-c="cl"><i style="background:#F5F5F5"></i>Аудитории</button>
+        <button type="button" aria-pressed="false" data-c="pub"><i style="background:#FFB199"></i>Общие зоны</button>
+        <button type="button" aria-pressed="false" data-c="svc"><i style="background:#666"></i>Служебные</button>
+      </div>
+      <form class="msearch" id="findForm">
+        <input id="findInput" type="text" placeholder="Найти: 102, кафе…" aria-label="Найти помещение">
+        <button type="submit" aria-label="Найти">→</button>
+      </form>
+    </div>
+    <div class="map-grid rv">
+      <div class="map-card"><div class="map-scroll"><svg id="planSvg" viewBox="0 0 800 520" role="img" aria-label="План этажа"></svg></div></div>
+      <div class="side">
+        <aside class="info" id="info" aria-live="polite"></aside>
+        <div class="rlist" id="rlist" aria-label="Список помещений"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="live">
+  <div class="wrap">
+    <div class="label rv"><b>05</b>Онлайн-расписание</div>
+    <h2 class="rv">Сейчас <span class="o">идёт</span></h2>
+    <div class="clock rv"><b id="clockT">00:00</b><span id="clockD"></span></div>
+    <div class="live-grid" id="liveGrid"></div>
+  </div>
+</section>
+
+<section class="light" id="news">
+  <div class="wrap">
+    <div class="label rv"><b>06</b>События</div>
+    <h2 class="rv">Новости</h2>
+    <div class="news-grid">
+      <article class="post rv">
+        <div class="img" style="background:var(--acc);color:#fff"><svg viewBox="40 66 496 520" class="mk"><use href="#mark"/></svg></div>
+        <div class="body"><span class="date">20 ноября</span><h3>Открытие выставочной галереи</h3><p>В галерее у входа — первая выставка студенческих плакатов. Вход свободный, галерея открыта каждый день.</p></div>
+      </article>
+      <div class="side-news">
+        <article class="post rv d1">
+          <div class="img" style="background:var(--ink);color:var(--acc)"><svg viewBox="40 66 496 520" class="mk"><use href="#mark"/></svg></div>
+          <div class="body"><span class="date">14 ноября</span><h3>Новая навигация в здании</h3><p>Указатели, таблички и карта этажей в единой айдентике.</p></div>
+        </article>
+        <article class="post rv d2">
+          <div class="img" style="background:#FFE3DA;color:var(--acc)"><svg viewBox="40 66 496 520" class="mk"><use href="#mark"/></svg></div>
+          <div class="body"><span class="date">5 ноября</span><h3>Студия VR / AR — 203</h3><p>На втором этаже открылась студия для 3D-проектов.</p></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap contact-grid">
+    <div class="rv">
+      <div class="label"><b style="color:#fff">07</b>Связь</div>
+      <h2>Приходи в&nbsp;гости</h2>
+      <dl>
+        <dt>Адрес</dt><dd>г. Алматы, ул. Примерная, 1</dd>
+        <dt>Телефон</dt><dd>+7 (700) 000-00-00</dd>
+        <dt>Почта</dt><dd>hello@sinergia.kz</dd>
+        <dt>Часы</dt><dd>Пн–Сб, 9:00–21:00</dd>
+      </dl>
+    </div>
+    <form id="form" class="rv d1">
+      <input type="text" placeholder="Имя" required aria-label="Имя">
+      <input type="email" placeholder="Email" required aria-label="Email">
+      <select id="dirSel" aria-label="Направление">
+        <option value="">Направление (необязательно)</option>
+        <option>Графический дизайн</option><option>Дизайн среды</option><option>Цифровой дизайн</option><option>VR / AR</option>
+      </select>
+      <textarea id="msg" placeholder="Сообщение" aria-label="Сообщение"></textarea>
+      <button class="btn" type="submit">Отправить <span class="ar">→</span></button>
+      <div class="ok" id="ok" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-logo rv"><svg viewBox="40 66 1900 520" class="mk" role="img" aria-label="Синергия — креативная лаборатория"><use href="#logo"/></svg></div>
+    <div class="foot-row">
+      <span>© 2026 Синергия. Дипломный проект.</span>
+      <div class="foot-links"><a href="#dirs">Направления</a><a href="#space">Карта</a><a href="#live">Расписание</a><a href="#top">Наверх ↑</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  /* прелоадер */
+  const pre=$('#pre');
+  function ready(){pre.classList.add('done');document.body.classList.add('ready');setTimeout(()=>pre.remove(),1100)}
+  setTimeout(ready,reduce?0:1100);
+
+  /* шапка, прогресс */
+  const hdr=$('#hdr'),prog=$('#prog');
+  function onScroll(){
+    const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    hdr.classList.toggle('solid',y>30);
+    prog.style.width=(h>0?y/h*100:0)+'%';
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  /* меню */
+  const burger=$('.burger'),menu=$('.menu');
+  burger.addEventListener('click',()=>{const o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o);hdr.classList.toggle('menu-open',o)});
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');burger.setAttribute('aria-expanded',false);hdr.classList.remove('menu-open')}));
+  const links=[...menu.querySelectorAll('a')];
+  const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+  $$('section[id]').forEach(s=>so.observe(s));
+
+  /* появление и счётчики */
+  const ro=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');ro.unobserve(e.target);
+    e.target.querySelectorAll('[data-count]').forEach(n=>{const to=+n.dataset.count;let i=0;const t=setInterval(()=>{n.textContent=++i;if(i>=to)clearInterval(t)},180)})
+  }),{threshold:.12});
+  $$('.rv').forEach(el=>ro.observe(el));
+
+  /* бегущая строка */
+  const words=['Графический дизайн','Дизайн среды','Цифровой дизайн','VR / AR','Галерея','Коворкинг','Мастерские'];
+  const one=words.map(w=>'<span>'+w+'<svg viewBox="40 66 496 520" class="mk"><use href="#mark"/></svg></span>').join('');
+  $('#mq').innerHTML=one+one;
+
+  /* параллакс знака и курсор */
+  const roof=$('#heroMark .roof'),base=$('#heroMark .base'),cur=$('#cur');
+  addEventListener('pointermove',e=>{
+    if(e.pointerType!=='mouse')return;
+    cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+    if(reduce)return;
+    const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;
+    roof.style.transform='translate('+(x*-30)+'px,'+(y*-30-6)+'px)';
+    base.style.transform='translate('+(x*30)+'px,'+(y*30+6)+'px)';
+  });
+  document.addEventListener('pointerover',e=>{cur.classList.toggle('big',!!e.target.closest('a,button,.room,.panel,input,select,textarea'))});
+
+  /* направления — аккордеон */
+  const DIRS=[
+    {n:'01',name:'Графический дизайн',room:'101',d:'Шрифт, плакат, айдентика и упаковка. Работаешь руками и в Illustrator, собираешь портфолио с первого семестра.',tags:['Типографика','Айдентика','Плакат','Упаковка']},
+    {n:'02',name:'Дизайн среды',room:'102',d:'Как люди живут в пространстве. Макеты, навигация, интерьер, свет и мебель.',tags:['Макетирование','Навигация','Интерьер']},
+    {n:'03',name:'Цифровой дизайн',room:'201',d:'Интерфейсы, сайты и моушн-графика. Figma, прототипы и анимация.',tags:['UI/UX','Веб','Моушн']},
+    {n:'04',name:'VR / AR',room:'203',d:'Иммерсивные проекты и 3D-миры. Blender, Unity и шлемы виртуальной реальности.',tags:['3D','Unity','Иммерсив']}
+  ];
+  const acc=$('#acc');
+  acc.innerHTML=DIRS.map((d,i)=>'<div class="panel'+(i===0?' open':'')+'" role="button" tabindex="0" aria-expanded="'+(i===0)+'" data-i="'+i+'">'+
+    '<span class="num">'+d.n+'</span><svg class="bg mk" viewBox="40 66 496 520"><use href="#mark"/></svg><span class="vt">'+d.name+'</span>'+
+    '<div class="ct"><h3>'+d.name+'</h3><p>'+d.d+'</p><div class="tags">'+d.tags.map(t=>'<span>'+t+'</span>').join('')+'</div>'+
+    '<button type="button" class="go" data-go="'+d.room+'">Мастерская '+d.room+' на карте →</button></div></div>').join('');
+  const panels=[...acc.children];
+  function openP(p){panels.forEach(x=>{const o=x===p;x.classList.toggle('open',o);x.setAttribute('aria-expanded',o)})}
+  panels.forEach(p=>{
+    p.addEventListener('click',e=>{if(!e.target.closest('.go'))openP(p)});
+    p.addEventListener('mouseenter',()=>{if(matchMedia('(min-width:961px)').matches)openP(p)});
+    p.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===p){e.preventDefault();openP(p)}});
+  });
+
+  /* карта здания — редизайн */
+  const CAT={ws:{n:'Мастерская',c:'#FF2A00'},cl:{n:'Аудитория',c:'#F5F5F5'},pub:{n:'Общая зона',c:'#FFB199'},svc:{n:'Служебное',c:'#666'}};
+  function row(list,y,h){let x=20;return list.map(r=>{const o={...r,x,y,W:r.w,H:h};x+=r.w+8;return o})}
+  const floors={
+    1:row([
+      {id:'122',n:'122',name:'Аудитория',c:'cl',w:110,d:'Аудитория на 30 мест.'},
+      {id:'121',n:'121',name:'Аудитория',c:'cl',w:110,d:'Аудитория на 30 мест.'},
+      {id:'123',n:'123',name:'Лекторий',c:'cl',w:140,d:'Лекции и открытые встречи до 80 человек.'},
+      {id:'gallery',n:'',name:'Галерея',c:'pub',w:150,d:'Студенческие выставки под световым фонарём.'},
+      {id:'cafe',n:'',name:'Кафе',c:'pub',w:110,d:'Кофе, перекус и место для общения.'},
+      {id:'reception',n:'',name:'Вход и ресепшен',c:'pub',w:100,d:'Главный вход и стойка информации.'}
+    ],40,190).concat(row([
+      {id:'101',n:'101',name:'Мастерская рисунка',c:'ws',w:150,d:'Мольберты, натурный фонд, дневной свет.'},
+      {id:'102',n:'102',name:'Макетная мастерская',c:'ws',w:150,d:'Станки, резка, сборка макетов.'},
+      {id:'103',n:'103',name:'Коворкинг',c:'pub',w:150,d:'Открытое рабочее пространство, круглосуточно.'},
+      {id:'stair1',n:'',name:'Лестница и лифт',c:'svc',w:100,d:'Подъём на 2 этаж.'},
+      {id:'wc1',n:'',name:'WC',c:'svc',w:80,d:'Санузлы.'},
+      {id:'store',n:'',name:'Склад',c:'svc',w:90,d:'Материалы для мастерских.'}
+    ],300,190)),
+    2:row([
+      {id:'222',n:'222',name:'Аудитория',c:'cl',w:110,d:'Аудитория на 30 мест.'},
+      {id:'221',n:'221',name:'Аудитория',c:'cl',w:110,d:'Аудитория на 30 мест.'},
+      {id:'224',n:'224',name:'Лекционная',c:'cl',w:140,d:'Лекционный зал с проектором.'},
+      {id:'lib',n:'',name:'Библиотека',c:'pub',w:150,d:'Книги по дизайну, искусству и архитектуре.'},
+      {id:'read',n:'',name:'Читальный зал',c:'pub',w:110,d:'Тихая зона для самостоятельной работы.'},
+      {id:'void',n:'',name:'Второй свет',c:'svc',w:100,d:'Пустота над входом.'}
+    ],40,190).concat(row([
+      {id:'201',n:'201',name:'Цифровая мастерская',c:'ws',w:150,d:'Компьютерный класс: графика и веб.'},
+      {id:'202',n:'202',name:'Цифровая мастерская',c:'ws',w:150,d:'Компьютерный класс: моушн и 3D.'},
+      {id:'203',n:'203',name:'Студия VR / AR',c:'ws',w:150,d:'Иммерсивные проекты, шлемы VR.'},
+      {id:'stair2',n:'',name:'Лестница и лифт',c:'svc',w:100,d:'Спуск на 1 этаж.'},
+      {id:'wc2',n:'',name:'WC',c:'svc',w:80,d:'Санузлы.'},
+      {id:'staff',n:'',name:'Кафедра',c:'svc',w:90,d:'Преподаватели и консультации.'}
+    ],300,190))
+  };
+  const svg=$('#planSvg'),info=$('#info'),rlist=$('#rlist'),NS='http://www.w3.org/2000/svg';
+  let floor=1,current=null,cat='all';
+  const el=(tag,attrs,txt)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt)e.textContent=txt;return e};
+  const CY=265; /* ось коридора */
+  function startPt(){return floor===1?{x:792,y:CY,l:'ВХОД'}:(()=>{const s=floors[2].find(r=>r.id==='stair2');return{x:s.x+s.W/2,y:CY,l:'ЛЕСТНИЦА'}})()}
+  function lines(g,text,x,y,maxW){
+    const probe=el('text',{x:0,y:-100,style:'font:600 12px Arial'});svg.appendChild(probe);
+    let line='',out=[];
+    text.split(' ').forEach(w=>{const t=(line?line+' ':'')+w;probe.textContent=t;if(probe.getComputedTextLength()>maxW&&line){out.push(line);line=w}else line=t});
+    out.push(line);probe.remove();
+    out.forEach((l,i)=>g.appendChild(el('text',{x,y:y+i*15},l)));
+  }
+  function draw(){
+    svg.innerHTML='';
+    svg.appendChild(el('text',{x:20,y:26,class:'wing2'},'КРЫЛО А'));
+    svg.appendChild(el('text',{x:20,y:512,class:'wing2'},'КРЫЛО Б · МАСТЕРСКИЕ'));
+    svg.appendChild(el('rect',{x:20,y:238,width:760,height:54,rx:14,class:'corr'}));
+    svg.appendChild(el('text',{x:38,y:269,class:'corr-t'},'КОРИДОР'));
+    floors[floor].forEach(r=>{
+      const g=el('g',{class:'room',tabindex:'0',role:'button','aria-label':(r.n?r.n+' ':'')+r.name});g.dataset.id=r.id;
+      g.appendChild(el('rect',{class:'bx',x:r.x,y:r.y,width:r.W,height:r.H,rx:14}));
+      g.appendChild(el('rect',{class:'st',x:r.x+14,y:r.y+14,width:22,height:4,rx:2,fill:CAT[r.c].c}));
+      let y=r.y+r.H-18;
+      svg.appendChild(g);
+      const tmp=[];lines({appendChild:t=>tmp.push(t)},r.name,r.x+14,0,r.W-28);
+      tmp.forEach((t,i)=>{t.setAttribute('y',y-(tmp.length-1-i)*15);g.appendChild(t)});
+      if(r.n)g.appendChild(el('text',{class:'n',x:r.x+14,y:r.y+50},r.n));
+      g.addEventListener('click',()=>select(r.id));
+      g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(r.id)}});
+    });
+    svg.appendChild(el('path',{class:'route',id:'route',d:''}));
+    const s=startPt(),you=el('g',{class:'you'});
+    you.appendChild(el('circle',{class:'p',cx:s.x,cy:s.y,r:9}));
+    you.appendChild(el('circle',{class:'c',cx:s.x,cy:s.y,r:7}));
+    you.appendChild(el('text',{x:s.x-(floor===1?10:0),y:s.y-14,'text-anchor':floor===1?'end':'middle'},'ВЫ ЗДЕСЬ'));
+    svg.appendChild(you);
+    rlist.innerHTML=floors[floor].map(r=>'<button type="button" data-id="'+r.id+'"><i style="background:'+CAT[r.c].c+'"></i><b>'+(r.n||'—')+'</b>'+esc(r.name)+'</button>').join('');
+    rlist.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>select(b.dataset.id)));
+    applyCat();
+    if(current)select(current);else idle();
+  }
+  function idle(){
+    info.innerHTML='<svg class="bgm mk" viewBox="40 66 496 520"><use href="#mark"/></svg><span class="tag">'+floor+' этаж</span><h3>Куда идём?</h3><p>Нажми на помещение на плане или в списке, и мы покажем маршрут.</p><div class="way"><b>●</b><span>Первая цифра номера — этаж. Крыло А сверху, мастерские в крыле Б снизу.</span></div>';
+  }
+  function applyCat(){
+    floors[floor].forEach(r=>{
+      const off=cat!=='all'&&r.c!==cat;
+      const g=svg.querySelector('.room[data-id="'+r.id+'"]');if(g)g.classList.toggle('dim',off);
+      const b=rlist.querySelector('[data-id="'+r.id+'"]');if(b)b.classList.toggle('hide',off);
+    });
+  }
+  function select(id){
+    const r=floors[floor].find(x=>x.id===id);if(!r)return;current=id;
+    svg.querySelectorAll('.room').forEach(g=>g.classList.toggle('on',g.dataset.id===id));
+    rlist.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+    const s=startPt(),cx=r.x+r.W/2,ty=r.y<CY?r.y+r.H-30:r.y+30;
+    const sc=$('.map-scroll');if(sc.scrollWidth>sc.clientWidth){sc.scrollTo({left:Math.max(0,cx/800*sc.scrollWidth-sc.clientWidth/2),behavior:'smooth'})}
+    const rt=$('#route');rt.setAttribute('d','M'+s.x+' '+CY+' H'+cx+' V'+ty);
+    const dist=Math.round((Math.abs(s.x-cx)+Math.abs(CY-ty))/8);
+    const wing=r.y<CY?'А':'Б';
+    let way=floor===1?'От входа по коридору':'Поднимитесь по лестнице на 2 этаж, затем по коридору';
+    way+=(r.y<CY?' — дверь слева, в крыле А.':' — дверь справа, в крыле Б.');
+    info.innerHTML='<svg class="bgm mk" viewBox="40 66 496 520"><use href="#mark"/></svg><span class="tag">'+floor+' этаж · крыло '+wing+' · '+CAT[r.c].n+'</span><h3>'+(r.n?r.n+'<br>':'')+esc(r.name)+'</h3><p>'+esc(r.d)+'</p><div class="way"><b>→</b><span>'+way+' ≈ '+Math.max(10,dist)+' шагов.</span></div>';
+  }
+  function setFloor(f){floor=f;$$('.floors button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.floor==f)));current=null;draw()}
+  $$('.floors button').forEach(b=>b.addEventListener('click',()=>setFloor(+b.dataset.floor)));
+  $$('#chips button').forEach(b=>b.addEventListener('click',()=>{cat=b.dataset.c;$$('#chips button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));applyCat()}));
+  function find(q){
+    q=String(q).trim().toLowerCase();if(!q)return false;
+    for(const f of [1,2]){const r=floors[f].find(x=>x.n===q||x.name.toLowerCase().includes(q));if(r){cat='all';$$('#chips button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.c==='all')));setFloor(f);select(r.id);return true}}
+    return false;
+  }
+  function showOnMap(room){find(room);$('#space').scrollIntoView({behavior:reduce?'auto':'smooth'})}
+  $('#findForm').addEventListener('submit',e=>{e.preventDefault();
+    if(!find($('#findInput').value))info.innerHTML='<span class="tag">Не найдено</span><h3>Нет такого помещения</h3><p>Попробуй: 101, 203, «кафе».</p>';
+  });
+  acc.addEventListener('click',e=>{const b=e.target.closest('.go');if(b)showOnMap(b.dataset.go)});
+  draw();
+
+  /* заголовки: подгоняем размер, чтобы слова не рвались */
+  function fit(){
+    $$('h1,h2').forEach(h=>{
+      h.style.fontSize='';
+      let fs=parseFloat(getComputedStyle(h).fontSize),n=0;
+      const over=()=>[...h.querySelectorAll('.ln>span')].some(s=>s.scrollWidth>h.clientWidth+1)||h.scrollWidth>h.clientWidth+1;
+      while(over()&&fs>18&&n++<60){fs-=2;h.style.fontSize=fs+'px'}
+    });
+  }
+  fit();addEventListener('resize',fit);if(document.fonts)document.fonts.ready.then(fit);
+
+  /* тест */
+  const R={g:0,s:1,c:2,v:3};
+  const Q=[
+    {q:'Что тебе интереснее делать?',a:[['Рисовать и придумывать знаки','g'],['Собирать макеты руками','s'],['Делать сайты и приложения','c'],['Строить 3D-миры','v']]},
+    {q:'Где ты работаешь лучше всего?',a:[['За столом с бумагой','g'],['В мастерской с инструментами','s'],['За компьютером','c'],['В шлеме VR','v']]},
+    {q:'Что выберешь для проекта?',a:[['Плакат','g'],['Навигацию для здания','s'],['Анимацию','c'],['Виртуальную выставку','v']]},
+    {q:'Какой результат радует больше?',a:[['Красивый логотип','g'],['Удобное пространство','s'],['Понятный интерфейс','c'],['Эффект «вау»','v']]},
+    {q:'Твой любимый инструмент?',a:[['Карандаш и Illustrator','g'],['Картон, клей, 3D-печать','s'],['Figma и After Effects','c'],['Blender и Unity','v']]}
+  ];
+  let step=0,score={};
+  const qMain=$('#qMain'),dots=[...$('#qDots').children];
+  function renderQ(){
+    dots.forEach((d,i)=>d.classList.toggle('on',i<step));
+    if(step>=Q.length)return result();
+    const it=Q[step];
+    qMain.innerHTML='<div class="q-anim"><span class="q-step">Вопрос '+(step+1)+' / '+Q.length+'</span><div class="q-title">'+it.q+'</div><div class="q-opts">'+it.a.map((a,i)=>'<button type="button" data-i="'+i+'"><b>'+'ABCD'[i]+'</b>'+a[0]+'</button>').join('')+'</div></div>';
+    qMain.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const k=it.a[+b.dataset.i][1];score[k]=(score[k]||0)+1;step++;renderQ()}));
+  }
+  function result(){
+    const best=Object.keys(R).reduce((a,b)=>(score[b]||0)>(score[a]||0)?b:a,'g'),d=DIRS[R[best]];
+    qMain.innerHTML='<div class="res q-anim"><span class="q-step">Твой результат</span><h3>'+d.name+'</h3><p>'+d.d+'</p><div class="btns"><button type="button" class="btn" id="qMap">Мастерская '+d.room+' <span class="ar">→</span></button><button type="button" class="btn ghost" id="qSign">Записаться на пробное</button><button type="button" class="btn ghost" id="qAgain">Заново</button></div></div>';
+    $('#qMap').addEventListener('click',()=>showOnMap(d.room));
+    $('#qSign').addEventListener('click',()=>{$('#dirSel').value=d.name;$('#msg').value='Хочу на пробное занятие: '+d.name;$('#contact').scrollIntoView({behavior:reduce?'auto':'smooth'})});
+    $('#qAgain').addEventListener('click',()=>{step=0;score={};renderQ()});
+  }
+  renderQ();
+
+  /* расписание */
+  const plan=[
+    {s:'09:00',e:'10:30',t:'Академический рисунок',r:'101',p:'Группа ГД-1'},
+    {s:'09:00',e:'10:30',t:'Основы типографики',r:'121',p:'Группа ГД-2'},
+    {s:'10:40',e:'12:10',t:'Макетирование',r:'102',p:'Группа ДС-1'},
+    {s:'10:40',e:'12:10',t:'UI/UX-дизайн',r:'201',p:'Группа ЦД-1'},
+    {s:'12:50',e:'14:20',t:'История дизайна',r:'123',p:'Лекторий, все курсы'},
+    {s:'12:50',e:'14:20',t:'Моушн-дизайн',r:'202',p:'Группа ЦД-2'},
+    {s:'14:30',e:'16:00',t:'Навигация и среда',r:'221',p:'Группа ДС-2'},
+    {s:'14:30',e:'16:00',t:'VR-прототипирование',r:'203',p:'Группа VR-1'},
+    {s:'16:10',e:'17:40',t:'Айдентика',r:'222',p:'Группа ГД-3'},
+    {s:'16:10',e:'17:40',t:'3D-визуализация',r:'202',p:'Группа ДС-3'},
+    {s:'18:00',e:'19:30',t:'Открытая лекция',r:'224',p:'Для всех желающих'}
+  ];
+  const m=t=>{const[a,b]=t.split(':');return a*60+ +b};
+  function renderLive(){
+    const d=new Date(),now=d.getHours()*60+d.getMinutes();
+    $('#clockT').textContent=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+    $('#clockD').textContent=d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+    const cur=plan.filter(x=>m(x.s)<=now&&now<m(x.e)).map(x=>({...x,now:true}));
+    let list=cur.concat(plan.filter(x=>m(x.s)>now)).slice(0,3);
+    if(list.length<3)list=list.concat(plan.slice(0,3-list.length).map(x=>({...x,tm:true})));
+    $('#liveGrid').innerHTML=list.map(x=>{
+      const pc=x.now?Math.round((now-m(x.s))/(m(x.e)-m(x.s))*100):0;
+      return '<div class="lesson'+(x.now?' now':'')+'"><div class="top"><span class="st">'+(x.now?'Идёт сейчас':x.tm?'Завтра':'Далее')+' · '+x.s+'–'+x.e+'</span><span class="rn">'+x.r+'</span></div><h3>'+x.t+'</h3><div class="meta">'+x.p+'</div>'+(x.now?'<div class="pb"><i style="width:'+pc+'%"></i></div>':'')+'</div>'}).join('');
+    $('#nowPill').textContent=cur.length?'Сейчас идёт: '+cur[0].t+' · ауд. '+cur[0].r:(list[0]?(list[0].tm?'Завтра в ':'Скоро в ')+list[0].s+': '+list[0].t:'');
+  }
+  renderLive();setInterval(renderLive,30000);
+
+  $('#form').addEventListener('submit',e=>{e.preventDefault();$('#ok').textContent='Спасибо! Мы ответим в ближайшее время.';e.target.reset()});
+})();
+</script>
+</body>
+</html>
